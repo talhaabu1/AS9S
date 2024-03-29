@@ -2,6 +2,7 @@ import { AppError, createJWT, passwordHashAndCompare, prisma } from '@/utils';
 import { TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
+import { TUser } from '@/types';
 
 //? user registration service⤵
 const userRegistrationIntoDB = async (payload: TUserRegistration) => {
@@ -96,7 +97,31 @@ const userLoginFormDB = async (
 };
 //? user login service⤴
 
+//? create category service⤵
+const createCategoryIntoDB = async (
+  payload: Pick<TUserRegistration, 'name'>,
+  user: TUser
+) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? create category into DB
+  const result = await prisma.category.create({
+    data: {
+      name: payload.name,
+    },
+  });
+
+  return result;
+};
+//? create category service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
+  createCategoryIntoDB,
 };

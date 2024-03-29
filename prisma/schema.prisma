@@ -23,7 +23,7 @@ model User {
 }
 
 //@ catagory model
-model Catagory {
+model Category {
   id        String      @id @default(uuid())
   name      String
   createdAt DateTime    @default(now())
@@ -46,7 +46,7 @@ model FoundItem {
   claim         Claim[]
 
   user     User     @relation(fields: [userId], references: [id]) // onet to many relation
-  catagory Catagory @relation(fields: [catagoryId], references: [id]) // onet to many relation
+  catagory Category @relation(fields: [catagoryId], references: [id]) // onet to many relation
 
   @@map("foundItems")
 }

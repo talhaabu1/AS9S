@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AllOperationController } from './allOperation.controller';
+import auth from '@/middlewares/auth';
 
 const router = Router();
 
@@ -8,5 +9,12 @@ router.post('/register', AllOperationController.userRegistration);
 
 //? user login route
 router.post('/login', AllOperationController.userLogin);
+
+//? create category route
+router.post(
+  '/found-item-categories',
+  auth,
+  AllOperationController.createCategory
+);
 
 export default router;

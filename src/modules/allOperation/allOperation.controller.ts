@@ -1,6 +1,7 @@
 import { catchAsync, sendResponse } from '@/utils';
 import { AllOperationService } from './allOperation.service';
 import httpStatus from 'http-status';
+import { TUser } from '@/types';
 
 //? user registration controller⤵
 const userRegistration = catchAsync(async (req, res) => {
@@ -8,7 +9,7 @@ const userRegistration = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: ' 🖋️ User registered successfully ✅',
+    message: '🖋️ User registered successfully ✅',
     data: result,
   });
 });
@@ -26,7 +27,23 @@ const userLogin = catchAsync(async (req, res) => {
 });
 //? user login controller⤴
 
+//? create category controller⤵
+const createCategory = catchAsync(async (req, res) => {
+  const result = await AllOperationService.createCategoryIntoDB(
+    req.body,
+    req.user as TUser
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: '🖋️ Found item category created successfully ✅',
+    data: result,
+  });
+});
+//? create category controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
+  createCategory,
 };
