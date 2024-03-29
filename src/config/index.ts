@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
-import { cleanEnv, num, str } from 'envalid';
+import { bool, cleanEnv, num } from 'envalid';
 import * as path from 'path';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export const env = cleanEnv(process.env, {
   PORT: num({ default: 8080 }),
-  SECRET_KEY_SECURE_ENCRYPT: str(),
-  ROUND_SALT: str(),
+  isDevelopment: bool({ default: true }),
 });

@@ -9,15 +9,70 @@ datasource db {
 
 //@ user model 
 model User {
-  id        String   @id @default(uuid())
+  id        String      @id @default(uuid())
   name      String
-  email     String   @unique
+  email     String      @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  profile   Profile?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  profile   Profile? // one to one relation
+  foundItem FoundItem[] // one to many relation
+  claim     Claim[] // one to many relation
 
   @@map("users")
+}
+
+//@ catagory model
+model Catagory {
+  id        String      @id @default(uuid())
+  name      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  foundItem FoundItem[]
+
+  @@map("catagories")
+}
+
+//@ foundItem model
+model FoundItem {
+  id            String   @id @default(uuid())
+  userId        String
+  catagoryId    String
+  foundItemName String
+  description   String
+  location      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt()
+  claim         Claim[]
+
+  user     User     @relation(fields: [userId], references: [id]) // onet to many relation
+  catagory Catagory @relation(fields: [catagoryId], references: [id]) // onet to many relation
+
+  @@map("foundItems")
+}
+
+//@ enum claim status
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+//@ claim model 
+model Claim {
+  id                     String      @id @default(uuid())
+  userId                 String
+  foundItemId            String
+  status                 ClaimStatus @default(PENDING)
+  distinguishingFeatures String
+  lostDate               DateTime
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt()
+
+  user      User      @relation(fields: [userId], references: [id]) // one to many relation
+  foundItme FoundItem @relation(fields: [foundItemId], references: [id]) // one to many relation
+
+  @@map("claims")
 }
 
 //@ profile model

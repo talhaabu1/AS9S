@@ -1,4 +1,5 @@
 import * as handle from '@helpers/handle-errors';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { AppError } from '@utils';
 import { NextFunction, Request, Response } from 'express';
 import { ErrorResponse } from 'interface/errors';
