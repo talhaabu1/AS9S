@@ -3,6 +3,7 @@ import { TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
+import { FoundItem, Prisma } from '@prisma/client';
 
 //? user registration service⤵
 const userRegistrationIntoDB = async (payload: TUserRegistration) => {
@@ -24,7 +25,7 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
     });
 
     //? profile create reference to user
-    await tx.profile.create({
+    await tx.userProfile.create({
       data: {
         bio: payload.profile.bio,
         age: payload.profile.age,
@@ -110,7 +111,7 @@ const createCategoryIntoDB = async (
   });
 
   //? create category into DB
-  const result = await prisma.category.create({
+  const result = await prisma.foundItemCategory.create({
     data: {
       name: payload.name,
     },
@@ -120,8 +121,69 @@ const createCategoryIntoDB = async (
 };
 //? create category service⤴
 
+//? create found item service⤵
+const createFoundItemIntoDB = async (
+  payload: Pick<
+    FoundItem,
+    'categoryId' | 'foundItemName' | 'description' | 'location'
+  >,
+  user: TUser
+) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? found item data object
+  const foundItemData = {
+    userId: user.id,
+    categoryId: payload.categoryId,
+    foundItemName: payload.foundItemName,
+    description: payload.description,
+    location: payload.location,
+  };
+
+  //? create found item into DB
+  const result = await prisma.foundItem.create({
+    data: foundItemData,
+    select: {
+      id: true,
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      categoryId: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      foundItemName: true,
+      description: true,
+      location: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return result;
+};
+//? create found item service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
   createCategoryIntoDB,
+  createFoundItemIntoDB,
 };

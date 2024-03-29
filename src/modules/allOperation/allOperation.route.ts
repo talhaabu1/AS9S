@@ -17,4 +17,7 @@ router.post(
   AllOperationController.createCategory
 );
 
+//? create found item route
+router.post('/found-items', auth, AllOperationController.createFoundItem);
+
 export default router;

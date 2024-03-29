@@ -9,23 +9,23 @@ datasource db {
 
 //@ user model 
 model User {
-  id        String      @id @default(uuid())
+  id        String       @id @default(uuid())
   name      String
-  email     String      @unique
+  email     String       @unique
   password  String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt()
-  profile   Profile? // one to one relation
-  foundItem FoundItem[] // one to many relation
-  claim     Claim[] // one to many relation
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt()
+  foundItem FoundItem[]
+  claim     Claim[]
+  profile   UserProfile?
 
   @@map("users")
 }
 
 //@ catagory model
-model Category {
+model FoundItemCategory {
   id        String      @id @default(uuid())
-  name      String
+  name      String      @unique
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt()
   foundItem FoundItem[]
@@ -37,7 +37,7 @@ model Category {
 model FoundItem {
   id            String   @id @default(uuid())
   userId        String
-  catagoryId    String
+  categoryId    String
   foundItemName String
   description   String
   location      String
@@ -45,8 +45,8 @@ model FoundItem {
   updatedAt     DateTime @updatedAt()
   claim         Claim[]
 
-  user     User     @relation(fields: [userId], references: [id]) // onet to many relation
-  catagory Category @relation(fields: [catagoryId], references: [id]) // onet to many relation
+  user     User              @relation(fields: [userId], references: [id]) // onet to many relation
+  category FoundItemCategory @relation(fields: [categoryId], references: [id]) // onet to many relation
 
   @@map("foundItems")
 }
@@ -76,7 +76,7 @@ model Claim {
 }
 
 //@ profile model
-model Profile {
+model UserProfile {
   id        String   @id @default(uuid())
   userId    String   @unique
   bio       String

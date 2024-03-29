@@ -42,8 +42,24 @@ const createCategory = catchAsync(async (req, res) => {
 });
 //? create category controller⤴
 
+//? create category controller⤵
+const createFoundItem = catchAsync(async (req, res) => {
+  const result = await AllOperationService.createFoundItemIntoDB(
+    req.body,
+    req.user as TUser
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: '🖋️ Found item reported successfully ✅',
+    data: result,
+  });
+});
+//? create category controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
   createCategory,
+  createFoundItem,
 };
