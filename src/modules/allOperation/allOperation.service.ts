@@ -1,6 +1,9 @@
-import { passwordHashAndCompare, prisma } from '@/utils';
+import { AppError, createJWT, passwordHashAndCompare, prisma } from '@/utils';
 import { TUserRegistration } from './allOperation.interface';
+import httpStatus from 'http-status';
+import { env } from '@/config';
 
+//? user registration service⤵
 const userRegistrationIntoDB = async (payload: TUserRegistration) => {
   //? password hash function
   const hashedPassword = await passwordHashAndCompare(payload.password, 'hash');
@@ -49,7 +52,51 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
 
   return result;
 };
+//? user registration service⤴
+
+//? user login service⤵
+const userLoginFormDB = async (
+  payload: Pick<TUserRegistration, 'email' | 'password'>
+) => {
+  //? get user data with email
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+    },
+  });
+
+  //? check this user password is valid
+  const isMatch = await passwordHashAndCompare(
+    payload.password,
+    'compare',
+    userData.password
+  );
+
+  //? user password not match error
+  if (!isMatch)
+    throw new AppError(httpStatus.UNAUTHORIZED, '😓 Wrong password ⛔');
+
+  //? jwt payload object
+  const jwtPayload = {
+    id: userData.id,
+    email: userData.email,
+  };
+
+  // ? jwt token create
+  const token = createJWT(jwtPayload, env.JWT_SECRET_KEY, {
+    expiresIn: '3d',
+  });
+
+  return {
+    id: userData.id,
+    name: userData.name,
+    email: userData.email,
+    token,
+  };
+};
+//? user login service⤴
 
 export const AllOperationService = {
   userRegistrationIntoDB,
+  userLoginFormDB,
 };

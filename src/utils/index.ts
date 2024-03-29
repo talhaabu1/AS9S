@@ -3,3 +3,4 @@ export { catchAsync } from './catch-async';
 export { sendResponse } from './sendResponse';
 export { prisma } from './prisma';
 export { passwordHashAndCompare } from './passwordHashAndCompare';
+export { createJWT, verifyJWT } from './jwtFunction';
