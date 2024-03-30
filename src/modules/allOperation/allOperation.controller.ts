@@ -1,7 +1,8 @@
-import { catchAsync, sendResponse } from '@/utils';
+import { catchAsync, pick, sendResponse } from '@/utils';
 import { AllOperationService } from './allOperation.service';
 import httpStatus from 'http-status';
 import { TUser } from '@/types';
+import { optionFilterName, queryFilterName } from './allOperation.constant';
 
 //? user registration controller⤵
 const userRegistration = catchAsync(async (req, res) => {
@@ -57,9 +58,30 @@ const createFoundItem = catchAsync(async (req, res) => {
 });
 //? create category controller⤴
 
+//? get all found items controller⤵
+const getAllFoundItems = catchAsync(async (req, res) => {
+  //? check query parameters⤵
+  const query = pick(req.query, queryFilterName);
+  const options = pick(req.query, optionFilterName);
+  //? check query parameters⤴
+  const { meta, data } = await AllOperationService.getAllFoundItemsFormDB(
+    query,
+    options
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: '🖋️ Found items retrieved successfully ✅',
+    meta,
+    data,
+  });
+});
+//? get all found items controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
   createCategory,
   createFoundItem,
+  getAllFoundItems,
 };

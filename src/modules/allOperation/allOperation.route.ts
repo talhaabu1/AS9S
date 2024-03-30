@@ -20,4 +20,7 @@ router.post(
 //? create found item route
 router.post('/found-items', auth, AllOperationController.createFoundItem);
 
+//? get all found items route
+router.get('/found-items', AllOperationController.getAllFoundItems);
+
 export default router;

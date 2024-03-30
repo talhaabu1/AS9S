@@ -1,9 +1,16 @@
-import { AppError, createJWT, passwordHashAndCompare, prisma } from '@/utils';
-import { TUserRegistration } from './allOperation.interface';
+import {
+  AppError,
+  calculatePagination,
+  createJWT,
+  passwordHashAndCompare,
+  prisma,
+} from '@/utils';
+import { TOptions, TQuery, TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
 import { FoundItem, Prisma } from '@prisma/client';
+import { searchFieldName } from './allOperation.constant';
 
 //? user registration service⤵
 const userRegistrationIntoDB = async (payload: TUserRegistration) => {
@@ -17,7 +24,7 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
     password: hashedPassword as string,
   };
 
-  // //! transaction operation variable
+  //? transaction operation variable
   const result = await prisma.$transaction(async (tx) => {
     //? user create
     const crateUser = await tx.user.create({
@@ -181,9 +188,88 @@ const createFoundItemIntoDB = async (
 };
 //? create found item service⤴
 
+//? get all found items service⤵
+const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
+  //? query object destructuring
+  const { searchTerm, foundItemName } = query;
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(options);
+
+  //? filter where and conditions variables
+  const andCondition: Prisma.FoundItemWhereInput[] = [];
+
+  //? searchTerm functionality ⤵
+  if (searchTerm) {
+    andCondition.push({
+      OR: searchFieldName.map((field) => ({
+        [field]: {
+          contains: query.searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+  //? searchTerm functionality ⤴
+
+  //? search field functionality⤵
+  if (foundItemName) {
+    andCondition.push({
+      foundItemName,
+    });
+  }
+  //? search field functionality⤴
+
+  //? get all found items and filter query variable
+  const result = await prisma.foundItem.findMany({
+    where: {
+      AND: andCondition,
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    select: {
+      id: true,
+      foundItemName: true,
+      description: true,
+      location: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      category: true,
+    },
+  });
+
+  //? total found items
+  const total = await prisma.foundItem.count({
+    where: {
+      AND: andCondition,
+    },
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+//? get all found items service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
   createCategoryIntoDB,
   createFoundItemIntoDB,
+  getAllFoundItemsFormDB,
 };
