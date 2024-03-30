@@ -78,10 +78,26 @@ const getAllFoundItems = catchAsync(async (req, res) => {
 });
 //? get all found items controller⤴
 
+//? create claim controller⤵
+const createClaim = catchAsync(async (req, res) => {
+  const result = await AllOperationService.createClaimIntoDB(
+    req.body,
+    req.user as TUser
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: '🖋️ Claim created successfully ✅',
+    data: result,
+  });
+});
+//? create claim controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
   createCategory,
   createFoundItem,
   getAllFoundItems,
+  createClaim,
 };

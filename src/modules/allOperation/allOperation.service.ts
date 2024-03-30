@@ -9,7 +9,7 @@ import { TOptions, TQuery, TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
-import { FoundItem, Prisma } from '@prisma/client';
+import { Claim, FoundItem, Prisma } from '@prisma/client';
 import { searchFieldName } from './allOperation.constant';
 
 //? user registration service⤵
@@ -266,10 +266,38 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
 };
 //? get all found items service⤴
 
+//? create claim service⤵
+const createClaimIntoDB = async (
+  payload: Pick<Claim, 'foundItemId' | 'distinguishingFeatures' | 'lostDate'>,
+  user: TUser
+) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? claim data object
+  const claimData = {
+    ...payload,
+    userId: user.id,
+  };
+
+  //? create claim into DB
+  const result = await prisma.claim.create({
+    data: claimData,
+  });
+
+  return result;
+};
+//? create claim service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
   createCategoryIntoDB,
   createFoundItemIntoDB,
   getAllFoundItemsFormDB,
+  createClaimIntoDB,
 };
