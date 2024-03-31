@@ -93,6 +93,20 @@ const createClaim = catchAsync(async (req, res) => {
 });
 //? create claim controller⤴
 
+//? get claims controller⤵
+const getAllClaims = catchAsync(async (req, res) => {
+  const result = await AllOperationService.getAllClaimsFormDB(
+    req.user as TUser
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: '🖋️ Claims retrieved successfully ✅',
+    data: result,
+  });
+});
+//? get claims controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
@@ -100,4 +114,5 @@ export const AllOperationController = {
   createFoundItem,
   getAllFoundItems,
   createClaim,
+  getAllClaims,
 };

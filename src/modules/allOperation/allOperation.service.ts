@@ -293,6 +293,54 @@ const createClaimIntoDB = async (
 };
 //? create claim service⤴
 
+//? get claims service⤵
+const getAllClaimsFormDB = async (user: TUser) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  const result = await prisma.claim.findMany({
+    select: {
+      id: true,
+      userId: true,
+      foundItemId: true,
+      distinguishingFeatures: true,
+      lostDate: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      foundItem: {
+        select: {
+          id: true,
+          userId: true,
+          categoryId: true,
+          foundItemName: true,
+          description: true,
+          location: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+          category: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+//? get claims service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
@@ -300,4 +348,5 @@ export const AllOperationService = {
   createFoundItemIntoDB,
   getAllFoundItemsFormDB,
   createClaimIntoDB,
+  getAllClaimsFormDB,
 };

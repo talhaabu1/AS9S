@@ -26,4 +26,7 @@ router.get('/found-items', AllOperationController.getAllFoundItems);
 //? create claim route
 router.post('/claims', auth, AllOperationController.createClaim);
 
+//? get claims route
+router.get('/claims', auth, AllOperationController.getAllClaims);
+
 export default router;

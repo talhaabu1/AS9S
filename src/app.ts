@@ -11,6 +11,10 @@ app.use(cors());
 
 app.use('/api', router);
 
+app.get('/', (req, res) => {
+  res.status(200).json('▄︻デ══━一 HEY BRO WHY USE MY SERVER 🤔');
+});
+
 app.use(notFound);
 
 app.use(globalCatch);
