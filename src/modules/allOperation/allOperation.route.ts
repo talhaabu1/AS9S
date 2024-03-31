@@ -35,4 +35,7 @@ router.put('/claims/:claimId', auth, AllOperationController.updateClaim);
 //? get my profile  route
 router.get('/my-profile', auth, AllOperationController.getMyProfile);
 
+//? update my profile  route
+router.put('/my-profile', auth, AllOperationController.updateMyProfile);
+
 export default router;

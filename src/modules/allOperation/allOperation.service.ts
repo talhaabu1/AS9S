@@ -9,7 +9,7 @@ import { TOptions, TQuery, TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
-import { Claim, FoundItem, Prisma } from '@prisma/client';
+import { Claim, FoundItem, Prisma, UserProfile } from '@prisma/client';
 import { searchFieldName } from './allOperation.constant';
 
 //? user registration service⤵
@@ -398,7 +398,7 @@ const updateClaimIntoDB = async (
 };
 //? update claim service⤴
 
-//? get my profile  service⤵
+//? update my profile  service⤵
 const getMyProfileFormDB = async (user: TUser) => {
   //? user exists or not
   await prisma.user.findUniqueOrThrow({
@@ -429,6 +429,43 @@ const getMyProfileFormDB = async (user: TUser) => {
 };
 //? get my profile service⤴
 
+//? get my profile  service⤵
+const updateMyProfileIntoDB = async (
+  payload: Pick<UserProfile, 'bio' | 'age'>,
+  user: TUser
+) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? update my profile into db variable
+  const result = await prisma.userProfile.update({
+    where: {
+      id: user.profileId,
+    },
+    data: {
+      ...payload,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+//? update my profile service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
@@ -439,4 +476,5 @@ export const AllOperationService = {
   getAllClaimsFormDB,
   updateClaimIntoDB,
   getMyProfileFormDB,
+  updateMyProfileIntoDB,
 };
