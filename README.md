@@ -4,7 +4,7 @@
 
 ### 🔗 [SERVER-LINK](https://l2b2a8.vercel.app)
 
-### 📽 [VIDEO-LINK](https://l2b2a8.vercel.app)
+### 📽 [VIDEO-LINK](https://drive.google.com/file/d/1TwZio7W9LFdBpVmO7yReOYDlFXlPhsbJ/view?usp=sharing)
 
 ## Description
 
