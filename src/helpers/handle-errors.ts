@@ -1,10 +1,11 @@
+import { env } from '@/config';
 import { ErrorResponse } from '@/interface/errors';
-import { env } from '@config';
 import { AppError } from '@utils';
+import httpStatus from 'http-status';
 import { ZodError } from 'zod';
 
 function getStack(stack: string | undefined) {
-  return env.isDevelopment ? stack : undefined;
+  return env.isDev ? stack : undefined;
 }
 
 export function appError(error: AppError): ErrorResponse {
@@ -13,7 +14,7 @@ export function appError(error: AppError): ErrorResponse {
     message: error.message,
     error: {
       sources: [],
-      stack: getStack(error.stack),
+      stack: getStack(error.message),
     },
   };
 }
@@ -29,10 +30,32 @@ export function serverError(error: Error): ErrorResponse {
   };
 }
 
+export function JWTExpiredError(error: Error): ErrorResponse {
+  return {
+    status: httpStatus.UNAUTHORIZED,
+    message: '💥 Token is expired 💢',
+    error: {
+      sources: [],
+      stack: getStack(error.stack),
+    },
+  };
+}
+
+export function JWTWebError(error: Error): ErrorResponse {
+  return {
+    status: httpStatus.UNAUTHORIZED,
+    message: '💥 Invalid Token ⛔',
+    error: {
+      sources: [],
+      stack: getStack(error.stack),
+    },
+  };
+}
+
 export function zodError(error: ZodError): ErrorResponse {
   const sources = error.issues.map((issue) => {
     return {
-      path: issue.path[issue.path.length - 1],
+      field: issue.path[issue.path.length - 1],
       message: issue.message,
     };
   });

@@ -6,6 +6,5 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export const env = cleanEnv(process.env, {
   PORT: num({ default: 8080 }),
-  isDevelopment: bool({ default: true }),
   JWT_SECRET_KEY: str(),
 });

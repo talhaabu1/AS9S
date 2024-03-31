@@ -1,5 +1,5 @@
 type ErrorSources = {
-  path: string | number;
+  field: string | number;
   message: string;
 }[];
 
