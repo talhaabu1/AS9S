@@ -39,4 +39,4 @@
 5.  Run locally: `yarn run start`
 6.  Prisma stiduo: `yarn run prismaS`
 7.  Prisma migrate: `yarn run prismaM`
-8.  Deploy: `tsc`
+8.  Deploy: `tsc` and `yarn run postbuild` and `vercel --pord`
