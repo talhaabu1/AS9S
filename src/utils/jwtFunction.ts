@@ -18,6 +18,7 @@ export const verifyJWT = (token: string, secret: Secret) => {
   const result = jwt.verify(token, secret) as JwtPayload & {
     id: string;
     email: string;
+    profileId: string;
   };
   return result;
 };

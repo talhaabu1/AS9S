@@ -72,6 +72,9 @@ const userLoginFormDB = async (
     where: {
       email: payload.email,
     },
+    include: {
+      profile: true,
+    },
   });
 
   //? check this user password is valid
@@ -89,6 +92,7 @@ const userLoginFormDB = async (
   const jwtPayload = {
     id: userData.id,
     email: userData.email,
+    profileId: userData.profile?.id,
   };
 
   // ? jwt token create
@@ -394,6 +398,37 @@ const updateClaimIntoDB = async (
 };
 //? update claim service⤴
 
+//? get my profile  service⤵
+const getMyProfileFormDB = async (user: TUser) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? user profile get form jwt token profileID
+  const result = await prisma.userProfile.findUnique({
+    where: {
+      id: user.profileId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+//? get my profile service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
@@ -403,4 +438,5 @@ export const AllOperationService = {
   createClaimIntoDB,
   getAllClaimsFormDB,
   updateClaimIntoDB,
+  getMyProfileFormDB,
 };
