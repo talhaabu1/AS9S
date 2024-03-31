@@ -29,4 +29,7 @@ router.post('/claims', auth, AllOperationController.createClaim);
 //? get claims route
 router.get('/claims', auth, AllOperationController.getAllClaims);
 
+//? update claim route
+router.put('/claims/:claimId', auth, AllOperationController.updateClaim);
+
 export default router;

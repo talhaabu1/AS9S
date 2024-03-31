@@ -361,6 +361,39 @@ const getAllClaimsFormDB = async (user: TUser) => {
 };
 //? get claims service⤴
 
+//? update claim service⤵
+const updateClaimIntoDB = async (
+  id: string,
+  payload: Pick<Claim, 'status'>,
+  user: TUser
+) => {
+  //? user exists or not
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+  });
+
+  //? claim exists or not
+  await prisma.claim.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  const result = await prisma.claim.update({
+    where: {
+      id,
+    },
+    data: {
+      status: payload.status,
+    },
+  });
+
+  return result;
+};
+//? update claim service⤴
+
 export const AllOperationService = {
   userRegistrationIntoDB,
   userLoginFormDB,
@@ -369,4 +402,5 @@ export const AllOperationService = {
   getAllFoundItemsFormDB,
   createClaimIntoDB,
   getAllClaimsFormDB,
+  updateClaimIntoDB,
 };

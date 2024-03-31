@@ -107,6 +107,24 @@ const getAllClaims = catchAsync(async (req, res) => {
 });
 //? get claims controller⤴
 
+//? update claim controller⤵
+const updateClaim = catchAsync(async (req, res) => {
+  //? claim id form params
+  const { claimId } = req.params;
+  const result = await AllOperationService.updateClaimIntoDB(
+    claimId,
+    req.body,
+    req.user as TUser
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: '🖋️ Claim updated successfully ✅',
+    data: result,
+  });
+});
+//? update claim controller⤴
+
 export const AllOperationController = {
   userRegistration,
   userLogin,
@@ -115,4 +133,5 @@ export const AllOperationController = {
   getAllFoundItems,
   createClaim,
   getAllClaims,
+  updateClaim,
 };
