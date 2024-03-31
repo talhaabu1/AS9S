@@ -196,7 +196,7 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
 
   //? filter where and conditions variables
   const andCondition: Prisma.FoundItemWhereInput[] = [];
-
+  let sortCondition: Prisma.FoundItemOrderByWithRelationInput = {};
   //? searchTerm functionality ⤵
   if (searchTerm) {
     andCondition.push({
@@ -209,6 +209,24 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
     });
   }
   //? searchTerm functionality ⤴
+
+  //? sortBy functionality⤵
+  if (sortBy === 'foundItemName') {
+    sortCondition = {
+      foundItemName: sortOrder,
+    };
+  } else if (sortBy === 'category') {
+    sortCondition = {
+      category: {
+        name: sortOrder,
+      },
+    };
+  } else {
+    sortCondition = {
+      createdAt: sortOrder,
+    };
+  }
+  //? sortBy functionality⤴
 
   //? search field functionality⤵
   if (foundItemName) {
@@ -225,9 +243,7 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
     },
     skip,
     take: limit,
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
+    orderBy: sortCondition,
     select: {
       id: true,
       foundItemName: true,
@@ -303,6 +319,7 @@ const getAllClaimsFormDB = async (user: TUser) => {
   });
 
   const result = await prisma.claim.findMany({
+    // claim select use
     select: {
       id: true,
       userId: true,
@@ -313,6 +330,7 @@ const getAllClaimsFormDB = async (user: TUser) => {
       createdAt: true,
       updatedAt: true,
       foundItem: {
+        // found item select use
         select: {
           id: true,
           userId: true,
@@ -323,6 +341,7 @@ const getAllClaimsFormDB = async (user: TUser) => {
           createdAt: true,
           updatedAt: true,
           user: {
+            // user select use
             select: {
               id: true,
               name: true,
@@ -331,6 +350,7 @@ const getAllClaimsFormDB = async (user: TUser) => {
               updatedAt: true,
             },
           },
+          // category select use
           category: true,
         },
       },
