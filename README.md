@@ -12,10 +12,10 @@
 
 ## 🔧 Features ⚙️
 
-- Item Reporting: Users can report lost items by providing details such as item description, location, name.
-- Item Search: Users can search for found items based on various criteria such as location, description, or name.
-- Item Claiming: Users can claim ownership of lost items by providing proof of ownership or identification.
-- User Authentication: Secure user authentication using JWT (JSON Web Tokens) to protect endpoints and ensure data privacy.
+- **Item Reporting**: Users can report lost items by providing details such as item description, location, name.
+- **Item Search**: Users can search for found items based on various criteria such as location, description, or name.
+- **Item Claiming**: Users can claim ownership of lost items by providing proof of ownership or identification.
+- **User Authentication**: Secure user authentication using JWT (JSON Web Tokens) to protect endpoints and ensure data privacy.
 
 ## Technologies Used 🔍
 
@@ -39,4 +39,4 @@
 5.  Run locally: `yarn run start`
 6.  Prisma stiduo: `yarn run prismaS`
 7.  Prisma migrate: `yarn run prismaM`
-8.  Deploy: `tsc`
+8.  Deploy: `tsc` and `yarn run postbuild` and `vercel --pord` // make sure vercel and server is connected 🔗
