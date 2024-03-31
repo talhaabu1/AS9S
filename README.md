@@ -1,26 +1,42 @@
-## Getting Started
-After installing all of the dependencies change the `.env.example` file `.env` and add the necessary variables.
+# LOST-AND-FOUND-SYSTEM
 
-Now you can use the following commands to spin up your app.
-> ⚠️ Only use npm for this
-```bash
-# dev server
-npm run dev
+## Live URL
 
-# production build
-npm run build
+### 🔗 [SERVER-LINK](https://l2b2a8.vercel.app)
 
-# running in production
-npm start
-```
+### 📽 [VIDEO-LINK](https://l2b2a8.vercel.app)
 
-After starting the dev server run the following command to check if it's working
+## Description
 
-```bash
-curl http://localhost:8080/api/
-```
+**_The Lost and Found System Backend is a RESTful API service designed to facilitate the management of lost and found items. It serves as the backend component of a comprehensive lost and found system, providing endpoints for users to report lost items, search for found items, and claim ownership of lost items._** 🔚
 
-This should send back the following response:
-```
-{"message":"Hello word!"}
-```
+## 🔧 Features ⚙️
+
+- User Authentication
+- User Registration
+- Private Route
+- Profile Update
+
+## Technologies Used 🔍
+
+- Backend:
+  - Express
+  - TypeScript
+  - Jsonwebtoken
+  - Dotenv
+  - Prisma
+- Database:
+  - Postgresql
+  - Supabase
+  - Vercel
+
+## Installation 📥
+
+1.  Clone the repository: `git clone https://github.com/Apollo-Level2-Web-Dev/L2-B2-Assignment-8-Full-stack.git`
+2.  Navigate to the project directory: `cd server`
+3.  Install dependencies: `yarn`
+4.  Start the application: `yarn run dev`
+5.  Run locally: `yarn run start`
+6.  Prisma stiduo: `yarn run prismaS`
+7.  Prisma migrate: `yarn run prismaM`
+8.  Deploy: `tsc`
