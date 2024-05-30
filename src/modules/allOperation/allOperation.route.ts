@@ -58,15 +58,15 @@ router.put(
   AllOperationController.updateClaim
 );
 
-//? get my profile  route
-router.get('/my-profile', auth, AllOperationController.getMyProfile);
+// //? get my profile  route
+// router.get('/my-profile', auth, AllOperationController.getMyProfile);
 
-//? update my profile  route
-router.put(
-  '/my-profile',
-  auth,
-  validateRequest(AllOperationValidation.updateMyProfile),
-  AllOperationController.updateMyProfile
-);
+// //? update my profile  route
+// router.put(
+//   '/my-profile',
+//   auth,
+//   validateRequest(AllOperationValidation.updateMyProfile),
+//   AllOperationController.updateMyProfile
+// );
 
 export default router;

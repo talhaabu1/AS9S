@@ -2,14 +2,13 @@ import { ClaimStatus } from '@prisma/client';
 import { z } from 'zod';
 
 const userRegistration = z.object({
-  name: z.string(),
+  username: z.string(),
   email: z.string().email(),
   password: z.string(),
-  profile: z.object({ bio: z.string(), age: z.number() }),
 });
 
 const userLogin = z.object({
-  email: z.string().email(),
+  userNameOrEmail: z.string(),
   password: z.string(),
 });
 
@@ -27,12 +26,10 @@ const createFoundItem = z.object({
 const createClaim = z.object({
   foundItemId: z.string(),
   distinguishingFeatures: z.string(),
-  lostDate: z
-    .string()
-    .datetime({
-      message:
-        'This is not a valid datetime valid datetime exmpale [2020-01-01T00:00:00Z]  ',
-    }),
+  lostDate: z.string().datetime({
+    message:
+      'This is not a valid datetime valid datetime exmpale [2020-01-01T00:00:00Z]  ',
+  }),
 });
 
 const updateClaim = z.object({

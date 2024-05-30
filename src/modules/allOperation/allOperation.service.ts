@@ -9,7 +9,7 @@ import { TOptions, TQuery, TUserRegistration } from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
-import { Claim, FoundItem, Prisma, UserProfile } from '@prisma/client';
+import { Claim, FoundItem, Prisma } from '@prisma/client';
 import { searchFieldName } from './allOperation.constant';
 
 //? user registration service⤵
@@ -19,44 +19,20 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
 
   //? user data object
   const userData = {
-    name: payload.name,
+    username: payload.username,
     email: payload.email,
     password: hashedPassword as string,
   };
+  console.log('🚀 ~ userRegistrationIntoDB ~ userData:', userData);
 
-  //? transaction operation variable
-  const result = await prisma.$transaction(async (tx) => {
-    //? user create
-    const crateUser = await tx.user.create({
-      data: userData,
-    });
-
-    //? profile create reference to user
-    await tx.userProfile.create({
-      data: {
-        bio: payload.profile.bio,
-        age: payload.profile.age,
-        userId: crateUser.id,
-      },
-    });
-
-    //? get and return user
-    const result = await tx.user.findUnique({
-      where: {
-        id: crateUser.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        password: false,
-        createdAt: true,
-        updatedAt: true,
-        profile: true,
-      },
-    });
-
-    return result;
+  //? create user
+  const result = await prisma.user.create({
+    data: userData,
+    select: {
+      id: true,
+      username: true,
+      email: true,
+    },
   });
 
   return result;
@@ -64,16 +40,19 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
 //? user registration service⤴
 
 //? user login service⤵
-const userLoginFormDB = async (
-  payload: Pick<TUserRegistration, 'email' | 'password'>
-) => {
+const userLoginFormDB = async (payload: {
+  userNameOrEmail: string;
+  password: string;
+}) => {
   //? get user data with email
-  const userData = await prisma.user.findUniqueOrThrow({
+  const userData = await prisma.user.findFirstOrThrow({
     where: {
-      email: payload.email,
-    },
-    include: {
-      profile: true,
+      OR: [
+        { username: payload.userNameOrEmail },
+        {
+          email: payload.userNameOrEmail,
+        },
+      ],
     },
   });
 
@@ -91,8 +70,8 @@ const userLoginFormDB = async (
   //? jwt payload object
   const jwtPayload = {
     id: userData.id,
+    username: userData.username,
     email: userData.email,
-    profileId: userData.profile?.id,
   };
 
   // ? jwt token create
@@ -102,7 +81,7 @@ const userLoginFormDB = async (
 
   return {
     id: userData.id,
-    name: userData.name,
+    name: userData.username,
     email: userData.email,
     token,
   };
@@ -110,10 +89,7 @@ const userLoginFormDB = async (
 //? user login service⤴
 
 //? create category service⤵
-const createCategoryIntoDB = async (
-  payload: Pick<TUserRegistration, 'name'>,
-  user: TUser
-) => {
+const createCategoryIntoDB = async (payload: any, user: TUser) => {
   //? user exists or not
   await prisma.user.findUniqueOrThrow({
     where: {
@@ -165,7 +141,7 @@ const createFoundItemIntoDB = async (
       user: {
         select: {
           id: true,
-          name: true,
+          username: true,
           email: true,
           createdAt: true,
           updatedAt: true,
@@ -258,7 +234,7 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
       user: {
         select: {
           id: true,
-          name: true,
+          username: true,
           email: true,
           createdAt: true,
           updatedAt: true,
@@ -348,7 +324,7 @@ const getAllClaimsFormDB = async (user: TUser) => {
             // user select use
             select: {
               id: true,
-              name: true,
+              username: true,
               email: true,
               createdAt: true,
               updatedAt: true,
@@ -399,71 +375,71 @@ const updateClaimIntoDB = async (
 //? update claim service⤴
 
 //? update my profile  service⤵
-const getMyProfileFormDB = async (user: TUser) => {
-  //? user exists or not
-  await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user.id,
-    },
-  });
+// const getMyProfileFormDB = async (user: TUser) => {
+//   //? user exists or not
+//   await prisma.user.findUniqueOrThrow({
+//     where: {
+//       id: user.id,
+//     },
+//   });
 
-  //? user profile get form jwt token profileID
-  const result = await prisma.userProfile.findUnique({
-    where: {
-      id: user.profileId,
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-    },
-  });
+//   //? user profile get form jwt token profileID
+//   const result = await prisma.userProfile.findUnique({
+//     where: {
+//       id: user.profileId,
+//     },
+//     include: {
+//       user: {
+//         select: {
+//           id: true,
+//           name: true,
+//           email: true,
+//           createdAt: true,
+//           updatedAt: true,
+//         },
+//       },
+//     },
+//   });
 
-  return result;
-};
+//   return result;
+// };
 //? get my profile service⤴
 
 //? get my profile  service⤵
-const updateMyProfileIntoDB = async (
-  payload: Pick<UserProfile, 'bio' | 'age'>,
-  user: TUser
-) => {
-  //? user exists or not
-  await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user.id,
-    },
-  });
+// const updateMyProfileIntoDB = async (
+//   payload: Pick<UserProfile, 'bio' | 'age'>,
+//   user: TUser
+// ) => {
+//   //? user exists or not
+//   await prisma.user.findUniqueOrThrow({
+//     where: {
+//       id: user.id,
+//     },
+//   });
 
-  //? update my profile into db variable
-  const result = await prisma.userProfile.update({
-    where: {
-      id: user.profileId,
-    },
-    data: {
-      ...payload,
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-    },
-  });
+//   //? update my profile into db variable
+//   const result = await prisma.userProfile.update({
+//     where: {
+//       id: user.profileId,
+//     },
+//     data: {
+//       ...payload,
+//     },
+//     include: {
+//       user: {
+//         select: {
+//           id: true,
+//           name: true,
+//           email: true,
+//           createdAt: true,
+//           updatedAt: true,
+//         },
+//       },
+//     },
+//   });
 
-  return result;
-};
+//   return result;
+// };
 //? update my profile service⤴
 
 export const AllOperationService = {
@@ -475,6 +451,6 @@ export const AllOperationService = {
   createClaimIntoDB,
   getAllClaimsFormDB,
   updateClaimIntoDB,
-  getMyProfileFormDB,
-  updateMyProfileIntoDB,
+  // getMyProfileFormDB,
+  // updateMyProfileIntoDB,
 };

@@ -1,11 +1,7 @@
 export type TUserRegistration = {
-  name: string;
+  username: string;
   email: string;
   password: string;
-  profile: {
-    bio: string;
-    age: number;
-  };
 };
 
 export type TQuery = {

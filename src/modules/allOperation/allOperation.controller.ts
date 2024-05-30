@@ -126,32 +126,32 @@ const updateClaim = catchAsync(async (req, res) => {
 //? update claim controller⤴
 
 //? get my profile controller⤵
-const getMyProfile = catchAsync(async (req, res) => {
-  const result = await AllOperationService.getMyProfileFormDB(
-    req.user as TUser
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: '🖋️ Profile retrieved successfully ✅',
-    data: result,
-  });
-});
-//? get my profile controller⤴
+// const getMyProfile = catchAsync(async (req, res) => {
+//   const result = await AllOperationService.getMyProfileFormDB(
+//     req.user as TUser
+//   );
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: '🖋️ Profile retrieved successfully ✅',
+//     data: result,
+//   });
+// });
+// //? get my profile controller⤴
 
-//? update my profile controller⤵
-const updateMyProfile = catchAsync(async (req, res) => {
-  const result = await AllOperationService.updateMyProfileIntoDB(
-    req.body,
-    req.user as TUser
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: '🖋️ User profile updated successfully ✅',
-    data: result,
-  });
-});
+// //? update my profile controller⤵
+// const updateMyProfile = catchAsync(async (req, res) => {
+//   const result = await AllOperationService.updateMyProfileIntoDB(
+//     req.body,
+//     req.user as TUser
+//   );
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: '🖋️ User profile updated successfully ✅',
+//     data: result,
+//   });
+// });
 //? update my profile controller⤴
 
 export const AllOperationController = {
@@ -163,6 +163,6 @@ export const AllOperationController = {
   createClaim,
   getAllClaims,
   updateClaim,
-  getMyProfile,
-  updateMyProfile,
+  // getMyProfile,
+  // updateMyProfile,
 };

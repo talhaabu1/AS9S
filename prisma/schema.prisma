@@ -9,15 +9,14 @@ datasource db {
 
 //@ user model 
 model User {
-  id        String       @id @default(uuid())
-  name      String
-  email     String       @unique
+  id        String      @id @default(uuid())
+  username  String      @unique
+  email     String      @unique
   password  String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt()
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
   foundItem FoundItem[]
   claim     Claim[]
-  profile   UserProfile?
 
   @@map("users")
 }
@@ -35,20 +34,33 @@ model FoundItemCategory {
 
 //@ foundItem model
 model FoundItem {
-  id            String   @id @default(uuid())
-  userId        String
-  categoryId    String
-  foundItemName String
-  description   String
-  location      String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt()
-  claim         Claim[]
+  id          String   @id @default(uuid())
+  userId      String
+  categoryId  String
+  description String
+  location    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt()
+  claim       Claim[]
 
   user     User              @relation(fields: [userId], references: [id]) // onet to many relation
   category FoundItemCategory @relation(fields: [categoryId], references: [id]) // onet to many relation
 
   @@map("foundItems")
+}
+
+model LostItem {
+  id          String   @id @default(uuid())
+  userId      String
+  categoryId  String
+  location    String
+  date        DateTime
+  number      String
+  image       String
+  description String
+  asFound     Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt()
 }
 
 //@ enum claim status
@@ -73,18 +85,4 @@ model Claim {
   foundItem FoundItem @relation(fields: [foundItemId], references: [id]) // one to many relation
 
   @@map("claims")
-}
-
-//@ profile model
-model UserProfile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  bio       String
-  age       Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-
-  user User @relation(fields: [userId], references: [id]) // one to one relation
-
-  @@map("profiles")
 }
