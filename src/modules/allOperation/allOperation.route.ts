@@ -22,16 +22,23 @@ router.post(
 
 //? create category route
 router.post(
-  '/found-item-categories',
-  auth,
+  '/category',
+  auth('ADMIN'),
   validateRequest(AllOperationValidation.category),
   AllOperationController.createCategory
+);
+
+//? get all categories
+router.get(
+  '/categories',
+  auth('ADMIN', 'USER'),
+  AllOperationController.getAllCategories
 );
 
 //? create found item route
 router.post(
   '/found-items',
-  auth,
+  auth('ADMIN'),
   validateRequest(AllOperationValidation.createFoundItem),
   AllOperationController.createFoundItem
 );
@@ -39,21 +46,29 @@ router.post(
 //? get all found items route
 router.get('/found-items', AllOperationController.getAllFoundItems);
 
+//? create lost item route
+router.post(
+  '/lost-item',
+  auth('USER'),
+  validateRequest(AllOperationValidation.createLostItem),
+  AllOperationController.createLostItem
+);
+
 //? create claim route
 router.post(
   '/claims',
-  auth,
+  auth('ADMIN'),
   validateRequest(AllOperationValidation.createClaim),
   AllOperationController.createClaim
 );
 
 //? get claims route
-router.get('/claims', auth, AllOperationController.getAllClaims);
+router.get('/claims', auth('ADMIN'), AllOperationController.getAllClaims);
 
 //? update claim route
 router.put(
   '/claims/:claimId',
-  auth,
+  auth('ADMIN'),
   validateRequest(AllOperationValidation.updateClaim),
   AllOperationController.updateClaim
 );

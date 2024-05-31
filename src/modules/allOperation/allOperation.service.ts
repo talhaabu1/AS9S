@@ -23,7 +23,6 @@ const userRegistrationIntoDB = async (payload: TUserRegistration) => {
     email: payload.email,
     password: hashedPassword as string,
   };
-  console.log('🚀 ~ userRegistrationIntoDB ~ userData:', userData);
 
   //? create user
   const result = await prisma.user.create({
@@ -72,6 +71,7 @@ const userLoginFormDB = async (payload: {
     id: userData.id,
     username: userData.username,
     email: userData.email,
+    role: userData.role,
   };
 
   // ? jwt token create
@@ -98,9 +98,9 @@ const createCategoryIntoDB = async (payload: any, user: TUser) => {
   });
 
   //? create category into DB
-  const result = await prisma.foundItemCategory.create({
+  const result = await prisma.category.create({
     data: {
-      name: payload.name,
+      name: payload.name.toUpperCase(),
     },
   });
 
@@ -108,14 +108,17 @@ const createCategoryIntoDB = async (payload: any, user: TUser) => {
 };
 //? create category service⤴
 
+//? get all categories service⤵
+const getAllCategoriesFormDB = async () => {
+  //? create category into DB
+  const result = await prisma.category.findMany();
+
+  return result;
+};
+//? get all categories service⤴
+
 //? create found item service⤵
-const createFoundItemIntoDB = async (
-  payload: Pick<
-    FoundItem,
-    'categoryId' | 'foundItemName' | 'description' | 'location'
-  >,
-  user: TUser
-) => {
+const createFoundItemIntoDB = async (payload: any, user: TUser) => {
   //? user exists or not
   await prisma.user.findUniqueOrThrow({
     where: {
@@ -133,38 +136,38 @@ const createFoundItemIntoDB = async (
   };
 
   //? create found item into DB
-  const result = await prisma.foundItem.create({
-    data: foundItemData,
-    select: {
-      id: true,
-      userId: true,
-      user: {
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-      categoryId: true,
-      category: {
-        select: {
-          id: true,
-          name: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-      foundItemName: true,
-      description: true,
-      location: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+  // const result = await prisma.foundItem.create({
+  //   data: foundItemData,
+  //   select: {
+  //     id: true,
+  //     userId: true,
+  //     user: {
+  //       select: {
+  //         id: true,
+  //         username: true,
+  //         email: true,
+  //         createdAt: true,
+  //         updatedAt: true,
+  //       },
+  //     },
+  //     categoryId: true,
+  //     category: {
+  //       select: {
+  //         id: true,
+  //         name: true,
+  //         createdAt: true,
+  //         updatedAt: true,
+  //       },
+  //     },
+  //     foundItemName: true,
+  //     description: true,
+  //     location: true,
+  //     createdAt: true,
+  //     updatedAt: true,
+  //   },
+  // });
 
-  return result;
+  return 'any';
 };
 //? create found item service⤴
 
@@ -191,58 +194,58 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
   //? searchTerm functionality ⤴
 
   //? sortBy functionality⤵
-  if (sortBy === 'foundItemName') {
-    sortCondition = {
-      foundItemName: sortOrder,
-    };
-  } else if (sortBy === 'category') {
-    sortCondition = {
-      category: {
-        name: sortOrder,
-      },
-    };
-  } else {
-    sortCondition = {
-      createdAt: sortOrder,
-    };
-  }
+  // if (sortBy === 'foundItemName') {
+  //   sortCondition = {
+  //     foundItemName: sortOrder,
+  //   };
+  // } else if (sortBy === 'category') {
+  //   sortCondition = {
+  //     category: {
+  //       name: sortOrder,
+  //     },
+  //   };
+  // } else {
+  //   sortCondition = {
+  //     createdAt: sortOrder,
+  //   };
+  // }
   //? sortBy functionality⤴
 
   //? search field functionality⤵
-  if (foundItemName) {
-    andCondition.push({
-      foundItemName,
-    });
-  }
+  // if (foundItemName) {
+  //   andCondition.push({
+  //     foundItemName,
+  //   });
+  // }
   //? search field functionality⤴
 
   //? get all found items and filter query variable
-  const result = await prisma.foundItem.findMany({
-    where: {
-      AND: andCondition,
-    },
-    skip,
-    take: limit,
-    orderBy: sortCondition,
-    select: {
-      id: true,
-      foundItemName: true,
-      description: true,
-      location: true,
-      createdAt: true,
-      updatedAt: true,
-      user: {
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-      category: true,
-    },
-  });
+  // const result = await prisma.foundItem.findMany({
+  //   where: {
+  //     AND: andCondition,
+  //   },
+  //   skip,
+  //   take: limit,
+  //   orderBy: sortCondition,
+  //   select: {
+  //     id: true,
+  //     foundItemName: true,
+  //     description: true,
+  //     location: true,
+  //     createdAt: true,
+  //     updatedAt: true,
+  //     user: {
+  //       select: {
+  //         id: true,
+  //         username: true,
+  //         email: true,
+  //         createdAt: true,
+  //         updatedAt: true,
+  //       },
+  //     },
+  //     category: true,
+  //   },
+  // });
 
   //? total found items
   const total = await prisma.foundItem.count({
@@ -257,16 +260,13 @@ const getAllFoundItemsFormDB = async (query: TQuery, options: TOptions) => {
       page,
       limit,
     },
-    data: result,
+    data: 'nay',
   };
 };
 //? get all found items service⤴
 
 //? create claim service⤵
-const createClaimIntoDB = async (
-  payload: Pick<Claim, 'foundItemId' | 'distinguishingFeatures' | 'lostDate'>,
-  user: TUser
-) => {
+const createClaimIntoDB = async (payload: any, user: TUser) => {
   //? user exists or not
   await prisma.user.findUniqueOrThrow({
     where: {
@@ -289,6 +289,10 @@ const createClaimIntoDB = async (
 };
 //? create claim service⤴
 
+//? create lost item service⤵
+const createLostItemIntoDB = () => {};
+//? create lost item service⤴
+
 //? get claims service⤵
 const getAllClaimsFormDB = async (user: TUser) => {
   //? user exists or not
@@ -298,46 +302,46 @@ const getAllClaimsFormDB = async (user: TUser) => {
     },
   });
 
-  const result = await prisma.claim.findMany({
-    // claim select use
-    select: {
-      id: true,
-      userId: true,
-      foundItemId: true,
-      distinguishingFeatures: true,
-      lostDate: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      foundItem: {
-        // found item select use
-        select: {
-          id: true,
-          userId: true,
-          categoryId: true,
-          foundItemName: true,
-          description: true,
-          location: true,
-          createdAt: true,
-          updatedAt: true,
-          user: {
-            // user select use
-            select: {
-              id: true,
-              username: true,
-              email: true,
-              createdAt: true,
-              updatedAt: true,
-            },
-          },
-          // category select use
-          category: true,
-        },
-      },
-    },
-  });
+  // const result = await prisma.claim.findMany({
+  //   // claim select use
+  //   select: {
+  //     id: true,
+  //     userId: true,
+  //     foundItemId: true,
+  //     distinguishingFeatures: true,
+  //     lostDate: true,
+  //     status: true,
+  //     createdAt: true,
+  //     updatedAt: true,
+  //     foundItem: {
+  //       // found item select use
+  //       select: {
+  //         id: true,
+  //         userId: true,
+  //         categoryId: true,
+  //         foundItemName: true,
+  //         description: true,
+  //         location: true,
+  //         createdAt: true,
+  //         updatedAt: true,
+  //         user: {
+  //           // user select use
+  //           select: {
+  //             id: true,
+  //             username: true,
+  //             email: true,
+  //             createdAt: true,
+  //             updatedAt: true,
+  //           },
+  //         },
+  //         // category select use
+  //         category: true,
+  //       },
+  //     },
+  //   },
+  // });
 
-  return result;
+  return 'd';
 };
 //? get claims service⤴
 
@@ -451,6 +455,8 @@ export const AllOperationService = {
   createClaimIntoDB,
   getAllClaimsFormDB,
   updateClaimIntoDB,
+  createLostItemIntoDB,
+  getAllCategoriesFormDB,
   // getMyProfileFormDB,
   // updateMyProfileIntoDB,
 };

@@ -43,6 +43,18 @@ const createCategory = catchAsync(async (req, res) => {
 });
 //? create category controller⤴
 
+//? get all categories controller⤵
+const getAllCategories = catchAsync(async (req, res) => {
+  const result = await AllOperationService.getAllCategoriesFormDB();
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: '🖋️ Get All Categories successfully ✅',
+    data: result,
+  });
+});
+//? get all categories controller⤴
+
 //? create category controller⤵
 const createFoundItem = catchAsync(async (req, res) => {
   const result = await AllOperationService.createFoundItemIntoDB(
@@ -78,6 +90,17 @@ const getAllFoundItems = catchAsync(async (req, res) => {
 });
 //? get all found items controller⤴
 
+//? create lost item controller⤵
+const createLostItem = catchAsync(async (req, res) => {
+  const result = await AllOperationService.createLostItemIntoDB();
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: '🖋️ Lost item created successfully ✅',
+    data: result,
+  });
+});
+//? create lost item  controller⤴
 //? create claim controller⤵
 const createClaim = catchAsync(async (req, res) => {
   const result = await AllOperationService.createClaimIntoDB(
@@ -163,6 +186,8 @@ export const AllOperationController = {
   createClaim,
   getAllClaims,
   updateClaim,
+  createLostItem,
+  getAllCategories,
   // getMyProfile,
   // updateMyProfile,
 };

@@ -23,6 +23,16 @@ const createFoundItem = z.object({
   location: z.string(),
 });
 
+const createLostItem = z.object({
+  userId: z.string(),
+  categoryId: z.string(),
+  location: z.string(),
+  number: z.string(),
+  image: z.string(),
+  description: z.string(),
+  asFound: z.boolean().optional().default(false),
+});
+
 const createClaim = z.object({
   foundItemId: z.string(),
   distinguishingFeatures: z.string(),
@@ -49,4 +59,5 @@ export const AllOperationValidation = {
   createClaim,
   updateClaim,
   updateMyProfile,
+  createLostItem,
 };
