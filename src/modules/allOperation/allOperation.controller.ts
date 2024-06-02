@@ -92,7 +92,7 @@ const getAllFoundItems = catchAsync(async (req, res) => {
 
 //? create lost item controller⤵
 const createLostItem = catchAsync(async (req, res) => {
-  const result = await AllOperationService.createLostItemIntoDB();
+  const result = await AllOperationService.createLostItemIntoDB(req.body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

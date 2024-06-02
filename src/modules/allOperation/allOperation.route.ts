@@ -37,8 +37,8 @@ router.get(
 
 //? create found item route
 router.post(
-  '/found-items',
-  auth('ADMIN'),
+  '/found-item',
+  auth('USER'),
   validateRequest(AllOperationValidation.createFoundItem),
   AllOperationController.createFoundItem
 );

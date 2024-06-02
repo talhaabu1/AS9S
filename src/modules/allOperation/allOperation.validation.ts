@@ -17,16 +17,26 @@ const category = z.object({
 });
 
 const createFoundItem = z.object({
+  userId: z.string(),
   categoryId: z.string(),
-  foundItemName: z.string(),
-  description: z.string(),
   location: z.string(),
+  foundDate: z.string().datetime({
+    message:
+      'This is not a valid datetime valid datetime exmpale [2020-01-01T00:00:00Z]  ',
+  }),
+  number: z.string(),
+  image: z.string(),
+  description: z.string(),
 });
 
 const createLostItem = z.object({
   userId: z.string(),
   categoryId: z.string(),
   location: z.string(),
+  lostDate: z.string().datetime({
+    message:
+      'This is not a valid datetime valid datetime exmpale [2020-01-01T00:00:00Z]  ',
+  }),
   number: z.string(),
   image: z.string(),
   description: z.string(),

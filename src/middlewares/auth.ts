@@ -1,5 +1,5 @@
 import { env } from '@/config';
-import { AppError, catchAsync, verifyJWT } from '@/utils';
+import { AppError, catchAsync, prisma, verifyJWT } from '@/utils';
 import httpStatus from 'http-status';
 
 type TRole = 'ADMIN' | 'USER';

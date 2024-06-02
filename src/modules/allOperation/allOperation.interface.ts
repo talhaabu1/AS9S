@@ -15,3 +15,14 @@ export type TOptions = {
   sortBy?: string | undefined;
   sortOrder?: 'asc' | 'desc' | undefined;
 };
+
+
+export type TLostItem = {
+  userId: string
+  categoryId: string
+  location: string
+  lostDate: string
+  number: string
+  image: string
+  description: string
+}

@@ -5,7 +5,12 @@ import {
   passwordHashAndCompare,
   prisma,
 } from '@/utils';
-import { TOptions, TQuery, TUserRegistration } from './allOperation.interface';
+import {
+  TLostItem,
+  TOptions,
+  TQuery,
+  TUserRegistration,
+} from './allOperation.interface';
 import httpStatus from 'http-status';
 import { env } from '@/config';
 import { TUser } from '@/types';
@@ -69,7 +74,6 @@ const userLoginFormDB = async (payload: {
   //? jwt payload object
   const jwtPayload = {
     id: userData.id,
-    username: userData.username,
     email: userData.email,
     role: userData.role,
   };
@@ -126,48 +130,11 @@ const createFoundItemIntoDB = async (payload: any, user: TUser) => {
     },
   });
 
-  //? found item data object
-  const foundItemData = {
-    userId: user.id,
-    categoryId: payload.categoryId,
-    foundItemName: payload.foundItemName,
-    description: payload.description,
-    location: payload.location,
-  };
+  const result = await prisma.foundItem.create({
+    data: payload,
+  });
 
-  //? create found item into DB
-  // const result = await prisma.foundItem.create({
-  //   data: foundItemData,
-  //   select: {
-  //     id: true,
-  //     userId: true,
-  //     user: {
-  //       select: {
-  //         id: true,
-  //         username: true,
-  //         email: true,
-  //         createdAt: true,
-  //         updatedAt: true,
-  //       },
-  //     },
-  //     categoryId: true,
-  //     category: {
-  //       select: {
-  //         id: true,
-  //         name: true,
-  //         createdAt: true,
-  //         updatedAt: true,
-  //       },
-  //     },
-  //     foundItemName: true,
-  //     description: true,
-  //     location: true,
-  //     createdAt: true,
-  //     updatedAt: true,
-  //   },
-  // });
-
-  return 'any';
+  return result;
 };
 //? create found item service⤴
 
@@ -290,7 +257,12 @@ const createClaimIntoDB = async (payload: any, user: TUser) => {
 //? create claim service⤴
 
 //? create lost item service⤵
-const createLostItemIntoDB = () => {};
+const createLostItemIntoDB = async (payload: TLostItem) => {
+  const result = await prisma.lostItem.create({
+    data: payload,
+  });
+  return result;
+};
 //? create lost item service⤴
 
 //? get claims service⤵
